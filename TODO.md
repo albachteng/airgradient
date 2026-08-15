@@ -114,6 +114,26 @@ CREATE TABLE readings (
 - [x] `list`
 - [x] `current`
 
+### `internal/db` — stats queries
+- [x] Write failing tests
+- [x] `OwnStatsByPlacement(from, to time.Time) ([]PlacementStats, error)`
+- [x] `ChicagoStatsByLocation(from, to time.Time) ([]LocationStats, error)`
+
+### `internal/summary`
+- [x] Write failing tests
+- [x] `Generate(store Store, from, to time.Time) (Summary, error)`
+- [x] `RenderHTML(s Summary) (string, error)` — HTML email with placement + Chicago tables
+
+### `internal/emailer`
+- [x] Write failing tests
+- [x] `New(cfg Config) *Emailer` — Gmail SMTP via `net/smtp`
+- [x] `NewWithSender` — injectable transport for testing
+- [x] `Send(subject, htmlBody string) error`
+
+### `cmd/summary`
+- [x] Load `.env`, generate summary, render HTML, send via SMTP
+- [x] `SUMMARY_PERIOD=week|month`
+
 ### Config & Infra
 - [x] `.env.example`
 - [x] `.gitignore`
