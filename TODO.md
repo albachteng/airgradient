@@ -79,41 +79,41 @@ CREATE TABLE readings (
 - [x] Write TODO.md
 
 ### `internal/client`
-- [ ] Write failing tests
-- [ ] Implement `Client` struct with base URL + token
-- [ ] `Ping() error`
-- [ ] `GetOwnMeasure(locationID string) (*Measure, error)`
-- [ ] `GetWorldMeasures() ([]Measure, error)`
-- [ ] Chicago bbox filter helper
+- [x] Write failing tests
+- [x] Implement `Client` struct with base URL + token
+- [x] `Ping() error`
+- [x] `GetOwnMeasure(locationID string) (*Measure, error)`
+- [x] `GetWorldMeasures() ([]Measure, error)`
+- [x] Chicago bbox filter helper
 
 ### `internal/db`
-- [ ] Write failing tests
-- [ ] `Open(path string) (*DB, error)` + schema migration
-- [ ] `SaveReading(r Reading) error`
-- [ ] `CurrentPlacement() (*Placement, error)`
-- [ ] `SetPlacement(label, description string) error`
-- [ ] `ListPlacements() ([]Placement, error)`
-- [ ] `ReadingsSince(t time.Time) ([]Reading, error)`
+- [x] Write failing tests
+- [x] `Open(path string) (*DB, error)` + schema migration
+- [x] `SaveReading(r Reading) error`
+- [x] `CurrentPlacement() (*Placement, error)`
+- [x] `SetPlacement(label, description string) error`
+- [x] `ListPlacements() ([]Placement, error)`
+- [x] `ReadingsSince(t time.Time) ([]Reading, error)`
 
 ### `internal/logger`
-- [ ] Write failing tests
-- [ ] `New(logDir string) (*Logger, error)`
-- [ ] Write to stdout + daily file simultaneously
-- [ ] `Log(msg string, fields map[string]any)`
+- [x] Write failing tests
+- [x] `New(logDir string) (*Logger, error)`
+- [x] Write to stdout + daily file simultaneously
+- [x] `Log(msg string, fields map[string]any)`
 
 ### `internal/poller`
-- [ ] Write failing tests
-- [ ] `Run(ctx context.Context, interval time.Duration)` — ticker loop
-- [ ] Fetch own + chicago → save → log each cycle
+- [x] Write failing tests
+- [x] `Run(ctx context.Context, interval time.Duration)` — ticker loop
+- [x] Fetch own + chicago → save → log each cycle
 
 ### `cmd/poller`
-- [ ] Load `.env`, wire up client/db/logger/poller, start
+- [x] Load `.env`, wire up client/db/logger/poller, start
 
 ### `cmd/placement`
-- [ ] `set <label> [description]`
-- [ ] `list`
-- [ ] `current`
+- [x] `set <label> [description]`
+- [x] `list`
+- [x] `current`
 
 ### Config & Infra
-- [ ] `.env.example`
-- [ ] `.gitignore`
+- [x] `.env.example`
+- [x] `.gitignore`
