@@ -49,6 +49,7 @@ func main() {
 	cfg := poller.Config{
 		LocationID:        locationID,
 		ChicagoSampleSize: chicagoN,
+		Log:               l.Log,
 	}
 	p := poller.New(c, store, cfg)
 

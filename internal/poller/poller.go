@@ -46,6 +46,7 @@ type APIClient interface {
 type Config struct {
 	LocationID        string
 	ChicagoSampleSize int
+	Log               func(msg string, fields map[string]any) // optional; nil = silent
 }
 
 type Poller struct {
@@ -58,25 +59,73 @@ func New(c APIClient, s Store, cfg Config) *Poller {
 	return &Poller{client: c, store: s, cfg: cfg}
 }
 
+func (p *Poller) log(msg string, fields map[string]any) {
+	if p.cfg.Log != nil {
+		p.cfg.Log(msg, fields)
+	}
+}
+
 func (p *Poller) RunOnce(ctx context.Context) {
 	placement, _ := p.store.CurrentPlacement()
 
-	if own, err := p.client.GetOwnMeasure(p.cfg.LocationID); err == nil {
+	if own, err := p.client.GetOwnMeasure(p.cfg.LocationID); err != nil {
+		p.log("own measure fetch failed", map[string]any{"error": err.Error()})
+	} else {
 		r := measureToReading(own, "own")
 		if placement != nil {
 			r.PlacementID = &placement.ID
 		}
 		p.store.SaveReading(r)
+		p.log("own reading", readingFields(r, placement))
 	}
 
-	if world, err := p.client.GetWorldMeasures(); err == nil {
+	if world, err := p.client.GetWorldMeasures(); err != nil {
+		p.log("world measures fetch failed", map[string]any{"error": err.Error()})
+	} else {
 		chicago := client.FilterChicago(world)
 		sample := client.SampleN(chicago, p.cfg.ChicagoSampleSize)
 		for _, m := range sample {
 			m := m
-			p.store.SaveReading(measureToReading(&m, "chicago"))
+			r := measureToReading(&m, "chicago")
+			p.store.SaveReading(r)
+			p.log("chicago reading", readingFields(r, nil))
 		}
+		p.log("poll cycle complete", map[string]any{
+			"chicago_total":  len(chicago),
+			"chicago_sample": len(sample),
+		})
 	}
+}
+
+func readingFields(r Reading, placement *Placement) map[string]any {
+	f := map[string]any{
+		"location_id":   r.LocationID,
+		"location_name": strVal(r.LocationName),
+		"timestamp":     r.Timestamp,
+	}
+	if r.Pm02 != nil {
+		f["pm2.5"] = *r.Pm02
+	}
+	if r.Rco2 != nil {
+		f["co2"] = *r.Rco2
+	}
+	if r.Atmp != nil {
+		f["temp_c"] = *r.Atmp
+	}
+	if r.Rhum != nil {
+		f["humidity"] = *r.Rhum
+	}
+	if placement != nil {
+		f["placement"] = placement.Label
+	}
+	return f
+}
+
+func strVal(s *string) string {
+	if s == nil {
+		return ""
+	}
+	return *s
 }
 
 func (p *Poller) Run(ctx context.Context, interval time.Duration) {
