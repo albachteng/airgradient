@@ -91,8 +91,8 @@ func TestPollerTicksAndSavesReadings(t *testing.T) {
 	}
 
 	cfg := poller.Config{
-		LocationID:         "42",
-		ChicagoSampleSize:  2,
+		LocationID:        "42",
+		ChicagoSampleSize: 2,
 	}
 
 	p := poller.New(fc, store, cfg)

@@ -113,11 +113,11 @@ func TestGetWorldMeasures(t *testing.T) {
 
 func TestFilterChicago(t *testing.T) {
 	measures := []client.Measure{
-		{LocationID: 1, Latitude: 41.85, Longitude: -87.65},  // Chicago
-		{LocationID: 2, Latitude: 13.75, Longitude: 100.52},  // Bangkok
-		{LocationID: 3, Latitude: 41.90, Longitude: -87.63},  // Chicago
-		{LocationID: 4, Latitude: 42.50, Longitude: -87.80},  // Outside bbox
-		{LocationID: 5, Latitude: 41.70, Longitude: -88.20},  // Outside bbox
+		{LocationID: 1, Latitude: 41.85, Longitude: -87.65}, // Chicago
+		{LocationID: 2, Latitude: 13.75, Longitude: 100.52}, // Bangkok
+		{LocationID: 3, Latitude: 41.90, Longitude: -87.63}, // Chicago
+		{LocationID: 4, Latitude: 42.50, Longitude: -87.80}, // Outside bbox
+		{LocationID: 5, Latitude: 41.70, Longitude: -88.20}, // Outside bbox
 	}
 
 	got := client.FilterChicago(measures)
