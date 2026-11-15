@@ -132,3 +132,4 @@ internal/
 
 - Public API docs: https://api.airgradient.com/public/docs/api/v1/
 - AirGradient documentation: https://www.airgradient.com/documentation
+
