@@ -34,7 +34,7 @@ jobs:
           VERSION="sha-${GITHUB_SHA::7}"
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
           CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-            go build -trimpath \
+            go build -trimpath -buildvcs=false \
             -ldflags "-X main.version=${VERSION}" \
             -o poller \
             ./cmd/poller/
