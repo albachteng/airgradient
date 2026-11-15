@@ -11,7 +11,7 @@ VERSION="${1:?usage: deploy-poller <version>}"
 APP=poller
 SRV="/srv/$APP"
 RELEASE_DIR="$SRV/releases/$VERSION"
-HEALTH_PORT="${HEALTH_PORT:-8080}"
+HEALTH_PORT="${HEALTH_PORT:-8081}"
 KEEP_RELEASES=3
 
 # Write binary from stdin to a temp file, then install atomically
