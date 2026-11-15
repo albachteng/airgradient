@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"strconv"
@@ -17,6 +18,8 @@ import (
 	"github.com/albachteng/airgradient/internal/logger"
 	"github.com/albachteng/airgradient/internal/poller"
 )
+
+var version = "dev"
 
 func main() {
 	godotenv.Load()
@@ -53,11 +56,24 @@ func main() {
 	}
 	p := poller.New(c, store, cfg)
 
+	healthPort := envOr("HEALTH_PORT", "8080")
+	go func() {
+		mux := http.NewServeMux()
+		mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		})
+		if err := http.ListenAndServe(":"+healthPort, mux); err != nil {
+			log.Printf("health server: %v", err)
+		}
+	}()
+
 	interval := time.Duration(intervalSec) * time.Second
 	l.Log("poller starting", map[string]any{
+		"version":          version,
 		"interval_seconds": intervalSec,
 		"location_id":      locationID,
 		"chicago_sample":   chicagoN,
+		"health_port":      healthPort,
 	})
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)

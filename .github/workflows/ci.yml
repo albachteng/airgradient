@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: [self-hosted, homelab]
+    container:
+      image: golang:1.25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check formatting
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "Unformatted files:"
+            echo "$unformatted"
+            exit 1
+          fi
+
+      - name: Vet
+        run: go vet ./...
+
+      - name: Test
+        run: go test ./...
+
+      - name: Build
+        run: |
+          VERSION="sha-${GITHUB_SHA::7}"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+            go build -trimpath \
+            -ldflags "-X main.version=${VERSION}" \
+            -o poller \
+            ./cmd/poller/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: poller-linux-amd64-${{ env.VERSION }}
+          path: poller
+          retention-days: 30
